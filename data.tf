@@ -3,7 +3,10 @@
  */
 
 data "aws_subnet" "subnet" {
-  tags = "${var.subnet_tags}"
+  tags = "${merge(
+    map("environment", "${var.environment}"),
+    var.subnet_tags)
+  }"
   availability_zone = "${element(var.availability_zones,count.index)}"
   count = "${length(var.availability_zones)}"
 }
@@ -40,4 +43,5 @@ data "aws_security_group" "service-sg" {
     name   = "tag:environment"
     values = ["${var.environment}"]
   }
+
 }
